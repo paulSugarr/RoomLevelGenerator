@@ -15,9 +15,9 @@ public class GeneratorDebuger : MonoBehaviour
 
     private void Start()
     {
-        _generator = new Generator(_rooms, _gridSize, 1);
+        _generator = new Generator(_rooms, _gridSize, Random.Range(0, 1000));
         _generator.Build();
-
+        
         var grid = _generator.Grid;
 
         for (int i = 0; i < grid.GetLength(0); i++)

@@ -18,7 +18,10 @@ namespace GridGenerator
         {
             Size = new Vector2Int(sizeX, sizeY);
         }
-        
+        public Room Copy()
+        {
+            return new Room(Size);
+        }
         public Vector2Int GetDoorLocalPosition(Direction direction)
         {
             Vector2Int result;
@@ -48,6 +51,29 @@ namespace GridGenerator
         public Vector2Int GetPositionFromDoor(Direction thisDoorDirection, Vector2Int doorPosition)
         {
             return doorPosition - GetDoorLocalPosition(thisDoorDirection);
+        }
+
+        public Vector2Int GetNextRoomDoorPosition(Direction direction)
+        {
+            Vector2Int result;
+            switch (direction)
+            {
+                case Direction.Up:
+                    result = new Vector2Int(Size.x / 2, Size.y - 1) + Vector2Int.up;
+                    break;
+                case Direction.Right:
+                    result = new Vector2Int(Size.x - 1, Size.y / 2) + Vector2Int.right;
+                    break;
+                case Direction.Down:
+                    result = new Vector2Int(Size.x / 2, 0) + Vector2Int.down;
+                    break;
+                case Direction.Left:
+                    result = new Vector2Int(0, Size.y / 2) + Vector2Int.left;
+                    break;
+                default:
+                    throw new System.ArgumentException();
+            }
+            return result + Position;
         }
     }
 }

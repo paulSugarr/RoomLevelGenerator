@@ -7,7 +7,8 @@ namespace GridGenerator
     public class Generator
     {
         private Vector2Int _gridSize;
-        private Room[] _rooms;
+        private Room[] _roomsPrototypes;
+        private List<Room> _rooms;
         private System.Random _random;
         private Stack<Room> _roomsWithoutNeighboors;
 
@@ -16,18 +17,19 @@ namespace GridGenerator
         public Generator(List<Room> rooms, Vector2Int gridSize, int seed)
         {
             _random = new System.Random(seed);
-            _rooms = new Room[rooms.Count];
+            _rooms = new List<Room>();
+            _roomsPrototypes = new Room[rooms.Count];
             _roomsWithoutNeighboors = new Stack<Room>();
-            rooms.CopyTo(_rooms);
+            rooms.CopyTo(_roomsPrototypes);
             _gridSize = new Vector2Int(gridSize.x, gridSize.y);
             Grid = new Cell[gridSize.x, gridSize.y];
         }
         public void Build()
         {
-            int roomIndex = _random.Next(0, _rooms.Length);
-            if (CanPasteRoom(_gridSize.x / 2, _gridSize.y / 2, _rooms[roomIndex]))
+            var startRoom = NextRoom();
+            if (CanPasteRoom(_gridSize.x / 2, _gridSize.y / 2, startRoom))
             {
-                PasteRoom(_gridSize.x / 2, _gridSize.y / 2, _rooms[roomIndex]);
+                PasteRoom(_gridSize.x / 2, _gridSize.y / 2, startRoom);
             }
 
             while (_roomsWithoutNeighboors.Count > 0)
@@ -62,6 +64,7 @@ namespace GridGenerator
         }
         private bool CanPasteRoom(int startX, int startY, Room room)
         {
+            Debug.Log(startX + " " + startY);
             if (startX < 0 || startY < 0 || startX + room.Size.x > Grid.GetLength(0) || startY + room.Size.y > Grid.GetLength(1))
             {
                 return false;
@@ -78,21 +81,26 @@ namespace GridGenerator
         }
         private Room NextRoom()
         {
-            int roomIndex = _random.Next(0, _rooms.Length);
-            return _rooms[roomIndex];
+            int roomIndex = _random.Next(0, _roomsPrototypes.Length);
+            Room newRoom = _roomsPrototypes[roomIndex].Copy();
+            _rooms.Add(newRoom);
+            return newRoom;
         }
 
         private void CreateNeighboors(Room room)
         {
-            int neighboorsCount = 3;
-            //int neighboorsCount = _random.Next(0, 3); //from 0 to 3 additional neighboors
+            int neighboorsCount = _random.Next() % 4 + 1; //from 0 to 3 additional neighboors
+            Debug.Log(neighboorsCount);
             for (int i = 0; i < neighboorsCount; i++)
             {
                 Room nextRoom = NextRoom();
-                if (CanPasteRoom(room.Position.x, room.Position.y, nextRoom))
+                Direction direction = (Direction)i;
+                Vector2Int doorPosition = room.GetNextRoomDoorPosition(direction);
+                direction = (Direction)((i + 2) % 4);
+                Vector2Int position = nextRoom.GetPositionFromDoor(direction, doorPosition);
+                if (CanPasteRoom(position.x, position.y, nextRoom))
                 {
-                    Direction direction = (Direction)i;
-                    Vector2Int position = room.GetDoorPosition(direction);
+
                     PasteRoom(position.x, position.y, nextRoom);
                 }
             }
