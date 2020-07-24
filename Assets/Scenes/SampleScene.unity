@@ -150,9 +150,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bd04b47b53ca384188a1df1e5c01f40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gridSize: {x: 10, y: 10}
+  _gridSize: {x: 7, y: 7}
   _rooms:
-  - Size: {x: 5, y: 5}
+  - Size: {x: 3, y: 3}
+    Position: {x: 0, y: 0}
+  _cellPrefab: {fileID: 8406556801278149942, guid: d0bf34cb252697648a09b12ab203c079,
+    type: 3}
+  _redMaterial: {fileID: 2100000, guid: a54e46c22936fae4baf77f805faa21b1, type: 2}
 --- !u!4 &468100994
 Transform:
   m_ObjectHideFlags: 0
