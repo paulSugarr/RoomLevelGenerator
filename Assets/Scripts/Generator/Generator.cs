@@ -11,7 +11,7 @@ namespace GridGenerator
         private System.Random _random;
         private Stack<Room> _roomsWithoutNeighboors;
 
-        public bool[,] Grid { get; private set; }
+        public Cell[,] Grid { get; private set; }
 
         public Generator(List<Room> rooms, Vector2Int gridSize, int seed)
         {
@@ -20,7 +20,7 @@ namespace GridGenerator
             _roomsWithoutNeighboors = new Stack<Room>();
             rooms.CopyTo(_rooms);
             _gridSize = new Vector2Int(gridSize.x, gridSize.y);
-            Grid = new bool[gridSize.x, gridSize.y];
+            Grid = new Cell[gridSize.x, gridSize.y];
         }
         public void Build()
         {
@@ -47,10 +47,17 @@ namespace GridGenerator
             {
                 for (int y = startY; y < startY + room.Size.y; y++)
                 {
-                    Grid[x, y] = true;
+                    Grid[x, y] = Cell.Room;
                 }
             }
+
             room.Position = new Vector2Int(startX, startY);
+            for (int i = 0; i < 4; i++)
+            {
+                Direction direction = (Direction)i;
+                Vector2Int position = room.GetDoorPosition(direction);
+                Grid[position.x, position.y] = Cell.Door;
+            }
             _roomsWithoutNeighboors.Push(room);
         }
         private bool CanPasteRoom(int startX, int startY, Room room)
@@ -64,7 +71,7 @@ namespace GridGenerator
             {
                 for (int y = startY; y < startY + room.Size.y; y++)
                 {
-                    if (Grid[x, y]) { return false; }
+                    if (Grid[x, y] != Cell.Empty) { return false; }
                 }
             }
             return true;
@@ -82,7 +89,6 @@ namespace GridGenerator
             for (int i = 0; i < neighboorsCount; i++)
             {
                 Room nextRoom = NextRoom();
-                Debug.Log(i);
                 if (CanPasteRoom(room.Position.x, room.Position.y, nextRoom))
                 {
                     Direction direction = (Direction)i;

@@ -9,7 +9,8 @@ public class GeneratorDebuger : MonoBehaviour
     [SerializeField] private List<Room> _rooms;
 
     [SerializeField] private GameObject _cellPrefab;
-    [SerializeField] private Material _redMaterial;
+    [SerializeField] private Material _roomMaterial;
+    [SerializeField] private Material _doorMaterial;
     private Generator _generator;
 
     private void Start()
@@ -24,7 +25,8 @@ public class GeneratorDebuger : MonoBehaviour
             for (int j = 0; j < grid.GetLength(1); j++)
             {
                 var cell = Instantiate(_cellPrefab, new Vector3(i, 0, j), Quaternion.identity);
-                if (grid[i,j]) { cell.GetComponent<MeshRenderer>().material = _redMaterial; }
+                if (grid[i,j] == Cell.Room) { cell.GetComponent<MeshRenderer>().material = _roomMaterial; }
+                if (grid[i,j] == Cell.Door) { cell.GetComponent<MeshRenderer>().material = _doorMaterial; }
             }
         }
     }
