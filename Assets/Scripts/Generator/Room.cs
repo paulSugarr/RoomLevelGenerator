@@ -75,5 +75,22 @@ namespace GridGenerator
             }
             return result + Position;
         }
+
+        public void SetWalls(ref Cell[,] grid)
+        {
+            for (int x = Position.x; x < Size.x + Position.x; x++)
+            {
+                for (int y = Position.y; y < Size.y + Position.y; y++)
+                {
+                    if (grid[x, y] != Cell.Room) { continue; }
+
+                    if (x == Position.x || x == Size.x + Position.x - 1 ||
+                        y == Position.y || y == Size.y + Position.y - 1)
+                    {
+                        grid[x, y] = Cell.Wall;
+                    }
+                }
+            }
+        }
     }
 }

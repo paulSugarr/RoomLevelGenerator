@@ -11,8 +11,9 @@ namespace GridGenerator
         private List<Room> _rooms;
         private System.Random _random;
         private Stack<Room> _roomsWithoutNeighboors;
+        private Cell[,] _grid;
 
-        public Cell[,] Grid { get; private set; }
+        public Cell[,] Grid { get => _grid; private set => _grid = value; }
 
         public Generator(List<Room> rooms, Vector2Int gridSize, int seed)
         {
@@ -45,6 +46,8 @@ namespace GridGenerator
                 }
 
             }
+            SetWalls();
+            RemoveDoors();
         }
         private void PasteRoom(int startX, int startY, Room room)
         {
@@ -119,7 +122,33 @@ namespace GridGenerator
             int neighboorsCount = _random.Next(1, 5); //from 1 to 4 neighboors
             CreateNeighboors(room, neighboorsCount);
         }
+        private void RemoveDoors()
+        {
+            for (int x = 0; x < _gridSize.x; x++)
+            {
+                for (int y = 0; y < _gridSize.y; y++)
+                {
+                    if ((x == _gridSize.x - 1 || y == _gridSize.y - 1 || x == 0 || y == 0) && Grid[x, y] != Cell.Empty)
+                    {
+                        Grid[x, y] = Cell.Wall;
+                        continue;
+                    }
+                    if (Grid[x, y] == Cell.Door && Grid[x - 1, y] != Cell.Door && Grid[x, y - 1] != Cell.Door &&
+                        Grid[x + 1, y] != Cell.Door && Grid[x, y + 1] != Cell.Door)
+                    {
+                        Grid[x, y] = Cell.Wall;
+                    }
+                }
+            }
+        }
 
+        private void SetWalls()
+        {
+            foreach (var room in _rooms)
+            {
+                room.SetWalls(ref _grid);
+            }
+        }
     }
 }
 
