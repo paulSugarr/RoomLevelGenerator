@@ -12,10 +12,11 @@ namespace GridGenerator
         private System.Random _random;
         private Stack<Room> _roomsWithoutNeighboors;
         private Cell[,] _grid;
+        private Vector2Int _startPosition;
 
         public Cell[,] Grid { get => _grid; private set => _grid = value; }
 
-        public Generator(List<Room> rooms, Vector2Int gridSize, int seed)
+        public Generator(List<Room> rooms, Vector2Int gridSize, Vector2Int startPosition, int seed)
         {
             _random = new System.Random(seed);
             _rooms = new List<Room>();
@@ -23,31 +24,31 @@ namespace GridGenerator
             _roomsWithoutNeighboors = new Stack<Room>();
             rooms.CopyTo(_roomsPrototypes);
             _gridSize = new Vector2Int(gridSize.x, gridSize.y);
+            _startPosition = new Vector2Int(startPosition.x, startPosition.y);
             Grid = new Cell[gridSize.x, gridSize.y];
         }
-        public void Build()
+        public void Build(Room startRoom)
         {
-            var startRoom = NextRoom();
-            if (CanPasteRoom(_gridSize.x / 2, _gridSize.y / 2, startRoom))
+            if (_rooms.Count <= 0) { _rooms.Add(startRoom); }
+            if (CanPasteRoom(_startPosition.x, _startPosition.y, startRoom))
             {
-                PasteRoom(_gridSize.x / 2, _gridSize.y / 2, startRoom);
+                PasteRoom(_startPosition.x, _startPosition.y, startRoom);
             }
 
             while (_roomsWithoutNeighboors.Count > 0)
             {
                 Room room = _roomsWithoutNeighboors.Pop();
-                if (_roomsWithoutNeighboors.Count <= 4)
-                {
-                    CreateNeighboors(room, 4);
-                }
-                else
-                {
-                    CreateNeighboors(room);
-                }
+                CreateNeighboors(room, 4);
 
             }
             SetWalls();
             RemoveDoors();
+            Debug.Log(_rooms.Count);
+        }
+        public void Build()
+        {
+            var startRoom = NextRoom();
+            Build(startRoom);
         }
         private void PasteRoom(int startX, int startY, Room room)
         {
@@ -63,7 +64,7 @@ namespace GridGenerator
                     Grid[x, y] = Cell.Room;
                 }
             }
-
+            _rooms.Add(room);
             room.Position = new Vector2Int(startX, startY);
             for (int i = 0; i < 4; i++)
             {
@@ -75,7 +76,6 @@ namespace GridGenerator
         }
         private bool CanPasteRoom(int startX, int startY, Room room)
         {
-            Debug.Log(startX + " " + startY);
             if (startX < 0 || startY < 0 || startX + room.Size.x > Grid.GetLength(0) || startY + room.Size.y > Grid.GetLength(1))
             {
                 return false;
@@ -94,7 +94,6 @@ namespace GridGenerator
         {
             int roomIndex = _random.Next(0, _roomsPrototypes.Length);
             Room newRoom = _roomsPrototypes[roomIndex].Copy();
-            _rooms.Add(newRoom);
             return newRoom;
         }
 

@@ -6,7 +6,9 @@ using GridGenerator;
 public class GeneratorDebuger : MonoBehaviour
 {
     [SerializeField] private Vector2Int _gridSize;
+    [SerializeField] private Vector2Int _startPosition;
     [SerializeField] private List<Room> _rooms;
+    [SerializeField] private Room _startRoom;
 
     [SerializeField] private GameObject _cellPrefab;
     [SerializeField] private Material _roomMaterial;
@@ -16,8 +18,8 @@ public class GeneratorDebuger : MonoBehaviour
 
     private void Start()
     {
-        _generator = new Generator(_rooms, _gridSize, Random.Range(0, 1000));
-        _generator.Build();
+        _generator = new Generator(_rooms, _gridSize, _startPosition, Random.Range(0, 1000));
+        _generator.Build(_startRoom);
         
         var grid = _generator.Grid;
 

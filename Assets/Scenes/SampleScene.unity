@@ -151,6 +151,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _gridSize: {x: 50, y: 50}
+  _startPosition: {x: 6, y: 6}
   _rooms:
   - Size: {x: 3, y: 3}
     Position: {x: 0, y: 0}
@@ -158,10 +159,14 @@ MonoBehaviour:
     Position: {x: 0, y: 0}
   - Size: {x: 6, y: 4}
     Position: {x: 0, y: 0}
+  _startRoom:
+    Size: {x: 14, y: 14}
+    Position: {x: 0, y: 0}
   _cellPrefab: {fileID: 8406556801278149942, guid: d0bf34cb252697648a09b12ab203c079,
     type: 3}
   _roomMaterial: {fileID: 2100000, guid: a54e46c22936fae4baf77f805faa21b1, type: 2}
   _doorMaterial: {fileID: 2100000, guid: 88574292e2bf8654783f71fc572136e0, type: 2}
+  _wallMaterial: {fileID: 2100000, guid: 2a6fefc671772f6469bc8ee9913061fe, type: 2}
 --- !u!4 &468100994
 Transform:
   m_ObjectHideFlags: 0
