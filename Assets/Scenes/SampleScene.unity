@@ -151,13 +151,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _gridSize: {x: 50, y: 50}
-  _startPosition: {x: 6, y: 6}
+  _startPosition: {x: 0, y: 0}
   _rooms:
   - Size: {x: 3, y: 3}
     Position: {x: 0, y: 0}
   - Size: {x: 3, y: 4}
     Position: {x: 0, y: 0}
   - Size: {x: 6, y: 4}
+    Position: {x: 0, y: 0}
+  - Size: {x: 4, y: 6}
     Position: {x: 0, y: 0}
   _startRoom:
     Size: {x: 14, y: 14}
