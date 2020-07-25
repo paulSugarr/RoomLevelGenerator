@@ -35,7 +35,15 @@ namespace GridGenerator
             while (_roomsWithoutNeighboors.Count > 0)
             {
                 Room room = _roomsWithoutNeighboors.Pop();
-                CreateNeighboors(room);
+                if (_roomsWithoutNeighboors.Count <= 4)
+                {
+                    CreateNeighboors(room, 4);
+                }
+                else
+                {
+                    CreateNeighboors(room);
+                }
+
             }
         }
         private void PasteRoom(int startX, int startY, Room room)
@@ -87,23 +95,29 @@ namespace GridGenerator
             return newRoom;
         }
 
-        private void CreateNeighboors(Room room)
+        private void CreateNeighboors(Room room, int neighboorsCount)
         {
-            int neighboorsCount = _random.Next() % 4 + 1; //from 0 to 3 additional neighboors
-            Debug.Log(neighboorsCount);
+            int startDirection = _random.Next(0, 4);
             for (int i = 0; i < neighboorsCount; i++)
             {
                 Room nextRoom = NextRoom();
-                Direction direction = (Direction)i;
+                Direction direction = (Direction)startDirection;
                 Vector2Int doorPosition = room.GetNextRoomDoorPosition(direction);
-                direction = (Direction)((i + 2) % 4);
+                direction = (Direction)((startDirection + 2) % 4);
                 Vector2Int position = nextRoom.GetPositionFromDoor(direction, doorPosition);
-                if (CanPasteRoom(position.x, position.y, nextRoom))
+                if (CanPasteRoom(position.x, position.y, nextRoom) && neighboorsCount > 0)
                 {
-
+                    neighboorsCount--;
                     PasteRoom(position.x, position.y, nextRoom);
                 }
+                startDirection = (startDirection + 1) % 4;
             }
+        }
+
+        private void CreateNeighboors(Room room)
+        {
+            int neighboorsCount = _random.Next(1, 5); //from 1 to 4 neighboors
+            CreateNeighboors(room, neighboorsCount);
         }
 
     }
