@@ -10,6 +10,7 @@ namespace GridGenerator
     {
         public Vector2Int Size;
         public Vector2Int Position = new Vector2Int(0, 0);
+        public float Destination;
         public Room(Vector2Int size)
         {
             Size = new Vector2Int(size.x, size.y);

@@ -28,6 +28,7 @@ public class GeneratorDebuger : MonoBehaviour
             for (int j = 0; j < grid.GetLength(1); j++)
             {
                 var cell = Instantiate(_cellPrefab, new Vector3(i, 0, j), Quaternion.identity);
+                cell.name = new Vector2Int((int)cell.transform.position.x, (int)cell.transform.position.z).ToString();
                 if (grid[i,j] == Cell.Room) { cell.GetComponent<MeshRenderer>().material = _roomMaterial; }
                 if (grid[i,j] == Cell.Door) { cell.GetComponent<MeshRenderer>().material = _doorMaterial; }
                 if (grid[i,j] == Cell.Wall) { cell.GetComponent<MeshRenderer>().material = _wallMaterial; }
